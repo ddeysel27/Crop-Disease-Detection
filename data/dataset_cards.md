@@ -1,0 +1,16 @@
+# Dataset Cards (fill as you add datasets)
+
+## PlantVillage
+- Source: ...
+- License: ...
+- Classes: ...
+- Notes: Lab/clean backgrounds; mitigate domain shift by mixing with field images.
+
+## PlantDoc
+- Source: ...
+- License: ...
+- Notes: In-the-wild; useful for robustness testing.
+
+## Cassava Leaf Disease
+- Source: TFDS
+- Notes: Good crop-specific subset.

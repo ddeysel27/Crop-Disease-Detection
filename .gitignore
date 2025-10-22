@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.env
+.venv
+venv/
+ENV/
+.ipynb_checkpoints/
+.DS_Store
+
+# Data & artifacts
+data/processed/
+experiments/runs/
+*.pth
+*.pt
+*.onnx
+*.ckpt
+*.log
+
+# OS / IDE
+*.swp
+*.swo
+*.tmp
+.vscode/
+.idea/
