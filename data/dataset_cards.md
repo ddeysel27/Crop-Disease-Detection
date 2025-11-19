@@ -153,5 +153,3 @@ If you *must* version datasets for reproducibility:
 | Small sample images (optional) | Zipped datasets or large outputs |
 
 ---
-
-If you’d like, I can generate a **clean `.gitignore` and `data/README.md`** template for your repo (formatted for your Crop Disease Detection project) so your teammates can set up the same folder structure safely. Would you like me to make that next?
