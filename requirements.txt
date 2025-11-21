@@ -1,31 +1,39 @@
-torch>=2.2
-torchvision>=0.17
-timm>=1.0.9
-albumentations>=1.4.4
-opencv-python>=4.10
-pandas>=2.2
-numpy>=1.26
-matplotlib>=3.9
-scikit-learn>=1.5
-tqdm>=4.66
-pyyaml>=6.0
-gradio>=4.44
-huggingface-hub>=0.25
-transformers>=4.44
-accelerate>=0.34
-faiss-cpu>=1.7.4
-sentence-transformers>=3.0.1
-onnxruntime>=1.19
-einops>=0.8
-nbformat>=5.10
-seaborn>=0.13.2
-streamlit
-torch
-torchvision
-ultralytics
-opencv-python
-pillow
-numpy
-scikit-learn
-tqdm
+# === CORE TORCH (CPU ONLY) ===
+torch==2.3.0+cpu
+torchvision==0.18.0+cpu
+torchaudio==2.3.0+cpu
+--extra-index-url https://download.pytorch.org/whl/cpu
 
+# === VISION & MODELS ===
+timm==1.0.9
+ultralytics==8.3.35
+opencv-python==4.10.0.84
+pillow==10.4.0
+
+# === DATA & UTILS ===
+numpy==1.26.4
+pandas==2.2.3
+matplotlib==3.9.2
+seaborn==0.13.2
+scikit-learn==1.5.2
+tqdm==4.66.5
+pyyaml==6.0.2
+albumentations==1.4.4
+
+# === HF / GENAI ===
+huggingface-hub==0.25.3
+transformers==4.44.2
+accelerate==0.34.2
+sentence-transformers==3.0.1
+faiss-cpu==1.7.4
+einops==0.8.0
+
+# === ONNX ===
+onnxruntime==1.19.2
+
+# === APPS & DASHBOARDS ===
+gradio==4.44.0
+streamlit==1.37.1
+
+# === JUPYTER SUPPORT ===
+nbformat==5.10.4
