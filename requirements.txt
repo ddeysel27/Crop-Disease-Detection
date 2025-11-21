@@ -19,3 +19,13 @@ onnxruntime>=1.19
 einops>=0.8
 nbformat>=5.10
 seaborn>=0.13.2
+streamlit
+torch
+torchvision
+ultralytics
+opencv-python
+pillow
+numpy
+scikit-learn
+tqdm
+
