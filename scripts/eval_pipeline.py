@@ -18,11 +18,11 @@ from sklearn.metrics import accuracy_score, classification_report
 
 import torch
 
-from src.config import (
+from app.config import (
     MODELS_DIR,
     DEVICE,
 )
-from src.models.loaders import (
+from src.load_model.loaders import (
     load_yolo_seg_model,
     load_vit_model,
 )

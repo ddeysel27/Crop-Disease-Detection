@@ -1,16 +1,23 @@
-# === CORE TORCH (CPU ONLY) ===
-torch==2.3.0+cpu
-torchvision==0.18.0+cpu
-torchaudio==2.3.0+cpu
+# ============================================
+# TORCH (CPU ONLY) — Python 3.12 compatible
+# ============================================
 --extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.3.0
+torchvision==0.18.0
+torchaudio==2.3.0
 
-# === VISION & MODELS ===
+# ============================================
+# COMPUTER VISION
+# ============================================
 timm==1.0.9
 ultralytics==8.3.35
 opencv-python==4.10.0.84
 pillow==10.4.0
+albumentations==1.4.4
 
-# === DATA & UTILS ===
+# ============================================
+# DATA SCIENCE STACK
+# ============================================
 numpy==1.26.4
 pandas==2.2.3
 matplotlib==3.9.2
@@ -18,22 +25,29 @@ seaborn==0.13.2
 scikit-learn==1.5.2
 tqdm==4.66.5
 pyyaml==6.0.2
-albumentations==1.4.4
 
-# === HF / GENAI ===
-huggingface-hub==0.25.3
+# ============================================
+# HUGGINGFACE / TRANSFORMERS (Py 3.12)
+# ============================================
 transformers==4.44.2
 accelerate==0.34.2
+huggingface-hub==0.24.6
 sentence-transformers==3.0.1
-faiss-cpu==1.7.4
+faiss-cpu==1.13.0
 einops==0.8.0
 
-# === ONNX ===
+# ============================================
+# ONNX (Py 3.12)
+# ============================================
 onnxruntime==1.19.2
 
-# === APPS & DASHBOARDS ===
-gradio==4.44.0
+# ============================================
+# UI / WEB APPS
+# ============================================
 streamlit==1.37.1
+gradio==4.44.0
 
-# === JUPYTER SUPPORT ===
+# ============================================
+# NOTEBOOK SUPPORT
+# ============================================
 nbformat==5.10.4

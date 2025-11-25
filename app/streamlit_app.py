@@ -5,8 +5,8 @@ from PIL import Image
 import cv2
 import torch
 
-from src.config import MODELS_DIR, DEVICE
-from src.models.loaders import (
+from app.config import MODELS_DIR, DEVICE
+from src.load_model.loaders import (
     load_yolo_seg_model,
     load_vit_model
 )
