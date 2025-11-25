@@ -1,111 +1,234 @@
-🌾 Crop Disease Detection — From Lab to Field
-
-Framing Statement (Assignment 6)
-Empowering smallholder farmers and agricultural advisors with AI that detects crop diseases early from leaf images using vision transformers and generative retrieval-augmented chat, enabling faster diagnosis, evidence-based treatment, and reduced yield losses.
-
+🌾 Crop Disease Detection — AI for Early Plant Health Diagnostics
+From Leaf Images to Actionable Insights — Bridging Machine Learning and Real-World Agriculture
 🧭 Overview
 
-Crop Disease Detection is an end-to-end AI system combining computer vision and language models to analyze crop leaf images, identify likely diseases, and provide retrieval-grounded treatment advice in natural language.
+Crop Disease Detection is a complete AI system for analyzing plant leaf images, identifying the species, detecting diseases, and presenting actionable information to the user.
 
-The workflow integrates:
+The platform combines:
 
-Segmentation (SAM 2 / U²-Net) → isolate leaf region
+Computer vision models (Vision Transformers + YOLO detector)
 
-Data Augmentation (Albumentations) → improve robustness
+Retrieval-augmented knowledge search
 
-Classification (Vision Transformer) → predict disease type
+Conversational LLMs for treatment advice
 
-Explainability (Grad-CAM) → visualize attention regions
+A Streamlit application for user-friendly interaction
 
-Calibration (Temperature Scaling) → realistic probabilities
+The goal is to support farmers, agronomists, and agricultural extension officers with fast, trustworthy, and accessible plant-health diagnostics.
 
-Knowledge Retrieval (FAISS + Sentence-Transformers) → fetch relevant agronomy facts
+🔬 System Architecture
+1. Image Processing
 
-Conversational LLM (Tiny LLaMA / Mistral) → summarize results into actionable guidance
+YOLO Detector (optional preprocessing)
+
+Used to detect and isolate leaf regions
+
+Helps improve classification on noisy images
+
+Data Augmentation using Albumentations
+
+Lighting variations
+
+Rotations, flips
+
+Blur / contrast adjustments
+
+Increases model robustness
+
+(Segmentation will be added in future versions.)
+
+2. Classification Pipeline
+
+Your system uses two-stage classification:
+
+a. Species Classification
+
+Vision Transformer (ViT-Base)
+
+Trained on your Species_split dataset
+
+Supports >20 species (PlantVillage + Cassava + Rice)
+
+b. Disease Classification
+
+Three specialized models:
+
+Species Group	Model Used
+Cassava	Cassava Disease ViT
+Rice	Rice Disease ViT
+Everything else	PlantVillage Disease ViT
+
+Each model outputs:
+
+Disease label
+
+Confidence score
+
+Calibrated probabilities (temperature scaling ready)
+
+3. Knowledge Retrieval Layer
+
+FAISS vector store for agronomy texts
+
+Sentence-Transformers (MiniLM) for embeddings
+
+Retrieves:
+
+Disease descriptions
+
+Treatment considerations
+
+Cultivation best practices
+
+Preventive measures
+
+4. Conversational LLM Layer
+
+Tiny LLaMA / Mistral (local or HF API)
+
+Converts predictions + retrieved knowledge into:
+
+Simple explanations
+
+Treatment guidance
+
+Step-by-step actions
+
+Warnings/edge cases
+
+The LLM never gives harmful or prescriptive advice; instead it provides neutral, factual, evidence-grounded guidance.
+
+5. User Interface (Streamlit App)
+
+The app includes:
+
+📤 Upload & Classify
+
+Image preview
+
+Species prediction
+
+Disease prediction
+
+Confidence scoring
+
+Clean label formatting
+
+Plant health assessment
+
+Low-confidence warnings
+
+Retake-photo tips
+
+🤖 Talk to Our Chatbot
+
+Ask for treatment help
+
+Search for similar cases
+
+Retrieve best practices
+
+📚 Browse Articles
+
+FAISS-powered RAG search
+
+Quickly find relevant agronomy info
+
+🌱 Animated Welcome Page
+
+Hero graphic
+
+Explanation of system
+
+Instructions and tips
 
 ⚙️ Quickstart
-
-Create environment
-
+1. Create Environment
 python -m venv .venv
-source .venv/Scripts/activate       # Windows
-# or
-source .venv/bin/activate           # macOS/Linux
+
+# Windows
+.\.venv\Scripts\activate
+
+# macOS/Linux
+source .venv/bin/activate
+
 pip install -r requirements.txt
 
+2. Prepare Data
 
-Prepare dataset
+Place raw datasets inside:
 
-Place source data inside data/raw/
-
-Run
-
-jupyter notebook notebooks/01_prepare_splits_preprocess.ipynb
+data/raw/
 
 
-→ writes segmented and preprocessed splits to data/processed/train|val|test/
+Run preprocessing:
 
-Train
+notebooks/01_prepare_splits_preprocess.ipynb
 
+
+Outputs go to:
+
+data/processed/train
+data/processed/val
+data/processed/test
+
+3. Train Species & Disease Models
 python -m src.models.train \
     --data data/processed \
     --model vit_base_patch16_224 \
-    --epochs 15 --img 224
+    --epochs 15 \
+    --img 224
+
+4. Evaluate Models
+
+Open:
+
+notebooks/03_evaluate_report.ipynb
 
 
-Evaluate
-Open notebooks/03_evaluate_report.ipynb
-→ View metrics, confusion matrix, Grad-CAM attention maps, and calibration plots.
+Includes accuracy, F1, confusion matrix, attention maps, etc.
 
-Launch App
-
-python app/gradio_app.py
+5. Launch Streamlit App
+streamlit run app/app.py
 
 
-Optionally start a local Ollama or Hugging Face endpoint for the conversational LLM layer.
+(Optional: Start your LLM backend like Ollama or HuggingFace Inference API.)
 
-🌱 Example Datasets
-Dataset	Type	Source / License
-PlantVillage	Controlled lab	Kaggle / CC BY-SA
-PlantDoc	Field images	GitHub / CC BY
-Cassava Leaf Disease	Field	TensorFlow DS
-Rice Leaf Disease	Field	Mendeley
+🌱 Supported Datasets
+Dataset	Type	Notes
+PlantVillage	Controlled Lab	Multi-crop, >50 classes
+PlantDoc	Field	Noisy real-world images
+Cassava Leaf Disease	Field	5 classes
+Rice Leaf Disease	Field	6 classes
 
-Maintain a data/dataset_cards.md summarizing:
+Each dataset is documented in:
 
-Source & license
+data/dataset_cards.md
 
-Number of classes & samples
-
-Train/val/test split ratio
-
-Any preprocessing or filtering notes
-
-🧠 Model Lineup Summary
-Stage	Model	Library	Output
-🟢 Segmentation	SAM 2 / U²-Net	Meta / HF	Binary mask (leaf only)
-🟡 Augmentation	Albumentations	albumentations	Robust images
-🔵 Classifier	ViT-Base-Patch16	timm / transformers	Disease label + confidence
-🟤 Explainability	Grad-CAM / Rollout	torchcam / custom	Heatmap overlay
-🧩 Calibration	Temperature Scaling	netcal	Calibrated probabilities
-🟠 Knowledge Retrieval	all-MiniLM-L6-v2 + FAISS	sentence-transformers	Vector index of agronomy text
-🧠 Conversational LLM	Tiny LLaMA / Mistral	Ollama / HF	Farmer-friendly advice
-⚙️ Deployment	Gradio Blocks	gradio	Unified web app
+🧠 Model Summary
+Stage	Model	Output
+Leaf Detection	YOLO	Bounding box (optional)
+Augmentation	Albumentations	Robust training images
+Species Classification	ViT-Base	Species label
+Disease Classification	ViT-Base	Disease label
+Explainability	Grad-CAM	Heatmap
+Retrieval	MiniLM + FAISS	Relevant text
+Conversational Layer	Mistral / TinyLLaMA	Actionable guidance
 🔒 Safety & Ethical Use
 
-This system provides decision support, not autonomous diagnosis.
+This platform provides decision support, not certified diagnosis
 
-Always verify results with qualified agronomists.
+Always consult agronomists for pesticide and chemical treatments
 
-Respect pesticide and biosecurity regulations.
+Avoid storing personal identifiable data
 
-Avoid storing personally identifiable information or location data.
+The LLM is tuned to be factual, neutral, and non-prescriptive
 
-The conversational module is fine-tuned for factual, neutral advice — not prescriptive treatment.
+Follow all local regulations for crop protection products
 
-📚 Citation / Acknowledgment
+📚 Citation
 
-If you use this project or adapt its architecture, please cite:
+If using this project, please cite:
 
 Deysel, D. (2025). Crop Disease Detection — From Lab to Field.
-University of Miami, Principles & Practices of AI 
+University of Miami, Principles & Practices of AI.
