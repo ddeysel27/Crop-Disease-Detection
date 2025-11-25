@@ -46,6 +46,12 @@ if uploaded:
 
     st.success("Prediction Complete")
 
+    st.subheader("📦 Leaf Detection (YOLO)")
+    st.image(result["boxed_image"], caption="Detected Leaf Bounding Box", use_column_width=True)
+
+    st.subheader("🍃 Cropped Leaf Region")
+    st.image(result["cropped_image"], caption="Cropped Leaf for Classification", use_column_width=True)
+
     # ------------------------------------------------------
     #     SPECIES CARD
     # ------------------------------------------------------
