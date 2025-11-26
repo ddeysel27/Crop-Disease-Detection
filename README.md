@@ -1,6 +1,6 @@
-🌾 Crop Disease Detection — AI for Early Plant Health Diagnostics
+# Crop Disease Detection — AI for Early Plant Health Diagnostics
 From Leaf Images to Actionable Insights — Bridging Machine Learning and Real-World Agriculture
-🧭 Overview
+### Overview
 
 Crop Disease Detection is a complete AI system for analyzing plant leaf images, identifying the species, detecting diseases, and presenting actionable information to the user.
 
@@ -16,7 +16,7 @@ A Streamlit application for user-friendly interaction
 
 The goal is to support farmers, agronomists, and agricultural extension officers with fast, trustworthy, and accessible plant-health diagnostics.
 
-🔬 System Architecture
+### System Architecture
 1. Image Processing
 
 YOLO Detector (optional preprocessing)
@@ -102,7 +102,7 @@ The LLM never gives harmful or prescriptive advice; instead it provides neutral,
 
 The app includes:
 
-📤 Upload & Classify
+### Upload & Classify
 
 Image preview
 
@@ -120,7 +120,7 @@ Low-confidence warnings
 
 Retake-photo tips
 
-🤖 Talk to Our Chatbot
+### Talk to Our Chatbot
 
 Ask for treatment help
 
@@ -128,21 +128,19 @@ Search for similar cases
 
 Retrieve best practices
 
-📚 Browse Articles
+### Browse Articles
 
 FAISS-powered RAG search
 
 Quickly find relevant agronomy info
 
-🌱 Animated Welcome Page
-
-Hero graphic
+### Welcome Page
 
 Explanation of system
 
 Instructions and tips
 
-⚙️ Quickstart
+### Quickstart
 1. Create Environment
 python -m venv .venv
 
@@ -194,7 +192,7 @@ streamlit run app/app.py
 
 (Optional: Start your LLM backend like Ollama or HuggingFace Inference API.)
 
-🌱 Supported Datasets
+### Supported Datasets
 Dataset	Type	Notes
 PlantVillage	Controlled Lab	Multi-crop, >50 classes
 PlantDoc	Field	Noisy real-world images
@@ -205,16 +203,16 @@ Each dataset is documented in:
 
 data/dataset_cards.md
 
-🧠 Model Summary
+### Model Summary
 Stage	Model	Output
-Leaf Detection	YOLO	Bounding box (optional)
+Leaf Detection	YOLO	Bounding box
 Augmentation	Albumentations	Robust training images
 Species Classification	ViT-Base	Species label
 Disease Classification	ViT-Base	Disease label
-Explainability	Grad-CAM	Heatmap
 Retrieval	MiniLM + FAISS	Relevant text
 Conversational Layer	Mistral / TinyLLaMA	Actionable guidance
-🔒 Safety & Ethical Use
+
+Safety & Ethical Use
 
 This platform provides decision support, not certified diagnosis
 
