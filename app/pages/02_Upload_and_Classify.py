@@ -44,6 +44,10 @@ if uploaded:
     with st.spinner("Analyzing image..."):
         result = pipeline.predict(img)
 
+    if "error" in result:
+        st.error(result["error"])
+        st.stop()
+
     st.success("Prediction Complete")
 
     st.subheader("📦 Leaf Detection (YOLO)")

@@ -34,11 +34,11 @@ def is_image(f):
 # SCRIPT
 # --------------------------------------------------
 
-print("\n📁 Saving sample test images to:", OUTPUT_DIR)
+print("\n Saving sample test images to:", OUTPUT_DIR)
 
 for dataset_name, path in DATASETS.items():
 
-    print(f"\n🔎 Dataset: {dataset_name}")
+    print(f"\nDataset: {dataset_name}")
     if not os.path.exists(path):
         print(f"  ⚠️ Path not found: {path}")
         continue
@@ -79,7 +79,7 @@ for dataset_name, path in DATASETS.items():
             dst = os.path.join(OUTPUT_DIR, dst_name)
             shutil.copy(src, dst)
 
-        print(f"  ✔ {class_name}: {len(sample)} images copied.")
+        print(f" {class_name}: {len(sample)} images copied.")
 
-print("\n✅ DONE! Check your folder:")
+print("\n DONE! Check folder:")
 print("   →", OUTPUT_DIR)

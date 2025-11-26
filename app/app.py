@@ -2,13 +2,14 @@ import streamlit as st
 
 # ---- Page Config ----
 st.set_page_config(
-    page_title="Crop Disease Detection",
+    page_title="Crop Doctor",
     page_icon="🌱",
     layout="wide",
 )
 
+
 # ---- Main App ----
-st.title("🌱 Crop Disease Detection")
+st.title("Crop Doctor")
 st.write(
     """
     Welcome to the Crop Disease Detection system.

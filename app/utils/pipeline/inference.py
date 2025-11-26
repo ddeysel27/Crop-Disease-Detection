@@ -2,6 +2,7 @@ import torch
 from PIL import Image
 import torchvision.transforms as transforms
 
+
 from utils.model_utils import clean_label
 from utils.species_mapping import (
     SPECIES_LIST,
@@ -11,6 +12,9 @@ from utils.species_mapping import (
 from utils.load_model.loaders import load_species_model, load_disease_model
 
 from utils.detection.leaf_detector import LeafDetector
+
+from utils.ood.ood_detector import OODDetector
+
 
 class InferencePipeline:
     def __init__(self, device="cpu"):
@@ -25,8 +29,11 @@ class InferencePipeline:
             for key, path in SPECIES_TO_MODEL.items()
         }
 
-        # NEW: add YOLO detector
+        # YOLO detector
         self.detector = LeafDetector("models/yolo_plantdoc_detect.pt")
+
+        # OOD detector
+        self.ood = OODDetector()
 
         # transforms
         self.tfms = transforms.Compose([
@@ -65,14 +72,37 @@ class InferencePipeline:
         cropped_image, boxed = self.detector.detect_leaf(image)
 
         if cropped_image is None:
-            cropped_image = image
+            return {
+                "error": "No leaf detected. Please upload a clear photo of a plant leaf."
+            }
+
 
         # 1. Preprocess
         img_tensor = self.preprocess(cropped_image)
 
-        # 2. Species prediction
-        species_idx, species_conf = self.predict_species(img_tensor)
+        # ---------- OOD CHECK ----------
+        with torch.no_grad():
+            logits = self.species_model(img_tensor)
+
+        ood_info = self.ood.is_ood(logits)
+
+        if ood_info["is_ood"]:
+            return {
+                "error": "❗ The image does not look like a valid plant leaf or is out of distribution."
+            }
+        # --------------------------------
+
+        # Species prediction
+        probs = torch.softmax(logits, dim=1)
+        species_conf, species_idx = probs.max(dim=1)
         species_name = SPECIES_LIST[species_idx]
+
+
+        logits = self.species_model(img_tensor)
+        ood = self.ood.is_ood(logits)
+
+        if ood["is_ood"]:
+            return {"error": "The image appears out-of-distribution (not a valid leaf)."}
 
     
         # 3. Decide which disease model
@@ -90,13 +120,28 @@ class InferencePipeline:
             raw_label = DISEASE_LABELS[disease_model_key][disease_idx]
             disease_label = clean_label(raw_label)
 
-        # 5. Return clean output
+
+        # ---------------------------------------------------
+        # 5. SAVE OUTPUT FOR LLM
+        # ---------------------------------------------------
+        try:
+            with open("latest_result.txt", "w") as f:
+                f.write(f"Species: {species_name}\n")
+                f.write(f"Disease: {disease_label}\n")
+                f.write(f"Species_Confidence: {species_conf:.2f}\n")
+                f.write(f"Disease_Confidence: {disease_conf:.2f}\n")
+        except Exception as e:
+            print("Failed to save latest_result.txt:", e)
+
+        # ---------------------------------------------------
+        # 6. RETURN CLEAN OUTPUT
+        # ---------------------------------------------------
         return {
             "species": species_name,
             "species_conf": float(species_conf),
             "disease": disease_label,
             "disease_conf": float(disease_conf),
-            "model_used": disease_model_key,     # <-- fixed
+            "model_used": disease_model_key,
             "cropped_image": cropped_image,
             "boxed_image": boxed
         }

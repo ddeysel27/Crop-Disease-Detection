@@ -3,7 +3,7 @@ import streamlit as st
 # MUST be first Streamlit call
 st.set_page_config(page_title="Welcome", layout="wide")
 
-st.title("🌿 Crop Doctor — AI-Powered Plant Health Assistant")
+st.title("Crop Doctor — AI-Powered Plant Health Assistant")
 
 # ---------- HERO IMAGE / GIF ----------
 # Place your file at: app/assets/hero_crop_doctor.gif (or .png)
@@ -22,16 +22,16 @@ this tool helps you quickly identify **species**, detect **diseases**, and under
 your plant’s health in seconds.
 """)
 
-st.subheader("✨ What This Tool Can Do")
+st.subheader("What This Tool Can Do")
 st.write("""
-- 📸 **Upload a leaf image** and get instant analysis  
-- 🌱 **Identify plant species** using deep learning (ViT)  
-- 🍂 **Detect diseases** across Cassava, Rice, and many PlantVillage crops  
-- 🩺 **Assess plant health** with clear status and confidence levels  
-- ⚠️ **Warn on low-confidence predictions** and suggest retaking the photo  
+- **Upload a leaf image** and get instant analysis  
+- **Identify plant species** using deep learning (ViT)  
+- **Detect diseases** across Cassava, Rice, and many PlantVillage crops  
+- **Assess plant health** with clear status and confidence levels  
+- **Warn on low-confidence predictions** and suggest retaking the photo  
 """)
 
-st.subheader("🔬 How It Works")
+st.subheader("How It Works")
 st.write("""
 1. Upload a clear photo of a single leaf.  
 2. The AI predicts the **species** and then the **disease** using specialized models.  
@@ -40,7 +40,7 @@ st.write("""
 """)
 
 st.info("""
-💡 *Best results tips*  
+ *Best results tips*  
 - Use bright, natural lighting  
 - Avoid heavy shadows and blur  
 - Let the leaf fill most of the frame  
@@ -48,5 +48,5 @@ st.info("""
 """)
 
 st.markdown("---")
-st.subheader("🚀 Ready to Begin?")
+st.subheader("Ready to Begin?")
 st.write("Go to **Upload and Classify** in the sidebar to start diagnosing your plants.")

@@ -12,7 +12,7 @@ class LeafDetector:
             cropped_leaf (PIL.Image or None)
             annotated_image (PIL.Image) — original image with YOLO bounding boxes drawn
         """
-        results = self.model.predict(pil_image, conf=0.25)
+        results = self.model.predict(pil_image, conf=0.10)
 
         if len(results) == 0 or len(results[0].boxes) == 0:
             # Return original image and no crop
