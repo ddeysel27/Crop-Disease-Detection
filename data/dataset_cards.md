@@ -1,16 +1,16 @@
-# 🌱 Dataset Cards — Crop Disease Detection
+#  Dataset Cards — Crop Disease Detection
 
 This document summarizes all datasets currently used for training, validation, and testing in the **Crop Disease Detection — From Lab to Field** project.
 
 Each dataset card includes:  
-- 📦 Source & License  
-- 🌾 Number of Classes  
-- 📊 Approx. Samples (Train/Val/Test)  
-- ⚙️ Preprocessing & Notes  
+-  Source & License  
+-  Number of Classes  
+-  Approx. Samples (Train/Val/Test)  
+-  Preprocessing & Notes  
 
 ---
 
-## 🧩 1. PlantVillage
+##  1. PlantVillage
 
 **Type:** Controlled lab dataset  
 **Source:** [Kaggle – PlantVillage](https://www.kaggle.com/datasets/emmarex/plantdisease)  
@@ -27,7 +27,7 @@ Each dataset card includes:
 
 ---
 
-## 🍃 2. PlantDoc
+##  2. PlantDoc
 
 **Type:** Real-world field images  
 **Source:** [GitHub – PlantDoc Object Detection Dataset](https://github.com/pratikkayal/PlantDoc-Object-Detection-Dataset)  
@@ -44,7 +44,7 @@ Each dataset card includes:
 
 ---
 
-## 🌿 3. Cassava Leaf Disease Dataset
+##  3. Cassava Leaf Disease Dataset
 
 **Type:** Field dataset  
 **Source:** [TensorFlow Datasets – Cassava Leaf Disease](https://www.tensorflow.org/datasets/catalog/cassava)  
@@ -61,7 +61,7 @@ Each dataset card includes:
 
 ---
 
-## 🌾 4. Rice Leaf Disease Dataset
+##  4. Rice Leaf Disease Dataset
 
 **Type:** Field dataset  
 **Source:** [Mendeley Data – Rice Leaf Disease](https://data.mendeley.com/datasets/tywbtsjrjv/1)  
@@ -78,7 +78,7 @@ Each dataset card includes:
 
 ---
 
-## 🧠 Integration Notes
+##  Integration Notes
 
 - All datasets are normalized to **ImageNet statistics** (mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225]).  
 - Augmentation (Albumentations) includes random crop, flip, rotation, blur, brightness, and hue shift.  
@@ -87,7 +87,7 @@ Each dataset card includes:
 
 ---
 
-## 📚 Citation
+##  Citation
 
 If you use these datasets, please cite their original authors as indicated on each source page, and acknowledge:
 
@@ -113,11 +113,13 @@ data/
 │ ├── plantvillage/
 │ ├── plantdoc/
 │ └── cassava/
+| └── riceleaf/
+| └── species_split/
 
 
 ---
 
-### 3️⃣ Track data in `.gitignore`
+### Track data in `.gitignore`
 Add this to `.gitignore` (if not already):
 
 Data folders
@@ -131,21 +133,21 @@ data/processed/
 
 ---
 
-### 4️⃣ (Optional) Use **DVC** or **Git LFS**
+### (Optional) Use **DVC** or **Git LFS**
 If you *must* version datasets for reproducibility:
 - Use **[DVC](https://dvc.org/)** (Data Version Control) — recommended for ML workflows.
 - Or use **Git LFS**, but only for small subsets or sample images.
 
 ---
 
-### 5️⃣ Push only:
+### Push only:
 ✅ Code (`src/`, `notebooks/`, `app/`)  
 ✅ Metadata (`dataset_cards.md`, `README.md`)  
 ✅ Scripts to download/process data  
 
 ---
 
-### 🧩 TL;DR
+### TL;DR
 | Push | Don’t Push |
 |:--|:--|
 | Code, notebooks, configs | Full datasets |
