@@ -4,6 +4,8 @@ import torchvision.transforms as transforms
 import torchvision.transforms.functional as TF
 import random
 import numpy as np
+from utils.explainability.gradcam_pp import GradCAMPP
+
 
 
 from utils.model_utils import clean_label
@@ -215,8 +217,14 @@ class InferencePipeline:
         raw_label = DISEASE_LABELS[disease_key][disease_idx]
         disease_label = clean_label(raw_label)
 
+        # -----------------------------------------------
+        # 9. Generate GRADCAM++ (CNN)
+        # -----------------------------------------------
+        grad = GradCAMPP(self.disease_models[disease_key])
+        heatmap_mask = grad(img_tensor, disease_idx)
+        heatmap_img = GradCAMPP.overlay(cropped_image, heatmap_mask)
         # ---------------------------------------------------
-        # 9. SAVE RESULT FOR LLM
+        # 10. SAVE RESULT FOR LLM
         # ---------------------------------------------------
         try:
             with open("latest_result.txt", "w") as f:
@@ -241,5 +249,6 @@ class InferencePipeline:
             "uncertainty_fused": float(fused_uncertainty),
             "model_used": disease_key,
             "cropped_image": cropped_image,
-            "boxed_image": boxed
+            "boxed_image": boxed,
+            "heatmap": heatmap_img
         }

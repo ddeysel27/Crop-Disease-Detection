@@ -7,6 +7,11 @@ from utils.visuals.radar_plot import radar_chart
 # ------------------------------------------------------
 # PAGE CONFIG
 # ------------------------------------------------------
+if "last_result" not in st.session_state:
+    st.session_state.last_result = None
+    st.session_state.last_uploaded_image = None
+
+
 st.set_page_config(page_title="Upload & Classify", layout="wide")
 st.sidebar.title("📤 Upload & Classify")
 st.sidebar.write("Upload a leaf image to detect species and disease.")
@@ -24,6 +29,23 @@ def load_pipeline():
     return st.session_state.pipeline
 
 pipeline = load_pipeline()
+
+# ------------------------------------------------------
+# IF PREVIOUS RESULT EXISTS, RESTORE IT
+# ------------------------------------------------------
+if st.session_state.last_result is not None:
+    st.info("Restoring your previous classification session…")
+
+    img = st.session_state.last_uploaded_image
+    result = st.session_state.last_result
+
+    # Render everything
+    st.image(img, caption="Uploaded Image", use_column_width=False)
+    st.markdown("---")
+
+    # … then paste the whole rendering code
+    # YOLO box, crop, species, disease card, uncertainty, heatmap, etc.
+    # EXACT SAME CODE YOU USE AFTER prediction
 
 
 # ------------------------------------------------------
@@ -48,6 +70,9 @@ if uploaded:
         st.stop()
 
     st.success("Prediction Complete")
+    st.session_state.last_uploaded_image = img
+    st.session_state.last_result = result
+
 
 
     # ------------------------------------------------------
@@ -98,6 +123,11 @@ if uploaded:
         # Confidence warnings
         if result["disease_conf"] < 0.70:
             st.warning("⚠️ Low disease confidence — ensure the leaf is centered, clear and bright.")
+        
+        st.markdown("### Model Explainability (RollOut)")
+        st.image(result["heatmap"], caption="What the model focused on")
+
+
 
     st.markdown("---")
 
