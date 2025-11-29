@@ -1,2 +1,2 @@
-Species: Cassava
-Disease: Healthy
+Species: Cherry_(including_sour)
+Disease: Cherry Including Sour Powdery Mildew
