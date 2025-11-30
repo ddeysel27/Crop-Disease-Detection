@@ -1,43 +1,72 @@
 import os
 
-# -----------------------------
-# Species (from Species_split)
-# -----------------------------
-SPECIES_SPLIT_PATH = "data/processed/Species_split/train"
-SPECIES_LIST = sorted(os.listdir(SPECIES_SPLIT_PATH))
+# ----------------------------------------------------
+# Resolve project root no matter where file is called
+# ----------------------------------------------------
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-# -----------------------------
-# Disease class folders
-# -----------------------------
-CASSAVA_PATH = "data/processed/Cassava/train"
-RICE_PATH = "data/processed/Rice/train"
-PLANTVILLAGE_PATH = "data/processed/PlantVillage/train"
+def p(rel_path):
+    """Build absolute paths relative to project root."""
+    return os.path.join(PROJECT_ROOT, rel_path)
 
+# ----------------------------------------------------
+# DATASET FOLDERS
+# ----------------------------------------------------
+CASSAVA_PATH = p("data/processed/Cassava/train")
+RICE_PATH = p("data/processed/Rice/train")
+PLANTVILLAGE_PATH = p("data/processed/PlantVillage/train")
+
+# ----------------------------------------------------
+# LOAD DISEASE LABEL FOLDERS
+# ----------------------------------------------------
 CASSAVA_LABELS = sorted(os.listdir(CASSAVA_PATH))
 RICE_LABELS = sorted(os.listdir(RICE_PATH))
 PLANTVILLAGE_LABELS = sorted(os.listdir(PLANTVILLAGE_PATH))
 
-# -----------------------------
-# Model mapping
-# -----------------------------
+# ----------------------------------------------------
+# SPECIES LIST
+# ----------------------------------------------------
+SPECIES_LIST = [
+    "Apple",
+    "Blueberry",
+    "Cassava",
+    "Cherry_(including_sour)",
+    "Corn_(maize)",
+    "Grape",
+    "Orange",
+    "Peach",
+    "Pepper,_bell",
+    "Potato",
+    "Raspberry",
+    "Rice",
+    "Soybean",
+    "Squash",
+    "Strawberry",
+    "Tomato",
+]
+
+
+# ----------------------------------------------------
+# MAP SPECIES → MODEL WEIGHTS
+# ----------------------------------------------------
 SPECIES_TO_MODEL = {
-    "Cassava": "models/cassava_best.pth",
-    "Rice": "models/rice_leaf_best.pth",
-    "PlantVillage": "models/plant_village_best.pth",
+    "Cassava": p("models/cassava_best.pth"),
+    "Rice": p("models/rice_leaf_best.pth"),
+    "PlantVillage": p("models/plant_village_best.pth"),
 }
 
-# -----------------------------
-# Disease label mapping
-# -----------------------------
+# ----------------------------------------------------
+# MAP SPECIES → DISEASE LABELS
+# ----------------------------------------------------
 DISEASE_LABELS = {
     "Cassava": CASSAVA_LABELS,
     "Rice": RICE_LABELS,
     "PlantVillage": PLANTVILLAGE_LABELS,
 }
 
-# -----------------------------
-# Number of classes PER MODEL
-# -----------------------------
+# ----------------------------------------------------
+# CLASS COUNTS
+# ----------------------------------------------------
 SPECIES_NUM_CLASSES = {
     "Cassava": len(CASSAVA_LABELS),
     "Rice": len(RICE_LABELS),

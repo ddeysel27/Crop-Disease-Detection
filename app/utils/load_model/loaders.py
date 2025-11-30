@@ -1,76 +1,81 @@
 from pathlib import Path
 from typing import Union
 import os
-
 import torch
-from ultralytics import YOLO
 from torchvision import models
+import torch.nn as nn
+from ultralytics import YOLO
 
-from config import DEVICE
-
+# Device comes from your config.py
+from config import DEVICE  
 
 PathLike = Union[str, Path]
 
-
-def load_yolo_seg_model(weights_path: PathLike) -> YOLO:
+# ============================
+# VIT BASE BUILDER (TorchVision)
+# ============================
+def _build_vit_base(num_classes: int):
     """
-    Loads a YOLO segmentation model (e.g. yolov8n-seg) from given .pt.
+    Build a TorchVision ViT-B_16 model with a custom classification head.
+    This MUST match the architecture used during training.
     """
-    weights_path = str(weights_path)
-    model = YOLO(weights_path)
+    model = models.vit_b_16(weights=None)   # Do NOT load pretrained since you trained your own
+    in_features = model.heads.head.in_features
+    model.heads.head = nn.Linear(in_features, num_classes)
     return model
 
 
-def _build_vit_base(num_classes: int = None):
+# ============================
+# GENERIC VIT WEIGHT LOADER
+# ============================
+def load_vit_model(weights_path: PathLike, num_classes: int):
     """
-    Builds a ViT-Base model. Adjust to match how you trained your models.
-    If you used timm, replace this with timm.create_model(...).
-    """
-    vit = models.vit_b_16(weights=models.ViT_B_16_Weights.IMAGENET1K_V1)
-    if num_classes is not None:
-        in_features = vit.heads.head.in_features
-        vit.heads.head = torch.nn.Linear(in_features, num_classes)
-    return vit
-
-
-def load_vit_model(weights_path: PathLike, num_classes: int = None) -> torch.nn.Module:
-    """
-    Loads a ViT model and applies pretrained weights.
+    Load a ViT-B_16 model with the correct output size and apply checkpoint weights.
     """
     weights_path = Path(weights_path)
+
     model = _build_vit_base(num_classes=num_classes)
 
     state_dict = torch.load(weights_path, map_location=DEVICE)
     model.load_state_dict(state_dict)
+
     model.to(DEVICE)
     model.eval()
     return model
 
-from utils.species_mapping import SPECIES_NUM_CLASSES, DISEASE_LABELS
+
+# ============================
+# IMPORT SPECIES MAPPING
+# ============================
+from utils.species_mapping import SPECIES_LIST, DISEASE_LABELS, SPECIES_TO_MODEL
 
 
-def load_species_model(device="cpu"):
-    from utils.species_mapping import SPECIES_LIST
-
+# ============================
+# LOAD SPECIES CLASSIFIER
+# ============================
+def load_species_model(device=DEVICE):
+    """
+    Load the 16-class species classifier (ViT-B16).
+    """
     weights = Path("models/species_classifier_vit.pth")
-    num_classes = len(SPECIES_LIST)  # 16 classes
+    num_classes = len(SPECIES_LIST)  # always 16
 
     model = load_vit_model(weights, num_classes=num_classes)
     model.to(device)
     return model
 
 
-
-
-def load_disease_model(weights_path: PathLike, device="cpu"):
+# ============================
+# LOAD DISEASE CLASSIFIER
+# ============================
+def load_disease_model(weights_path: PathLike, device=DEVICE):
     """
-    Loads a disease classifier for a given species (Cassava, Rice, PlantVillage).
+    Load Cassava / Rice / PlantVillage disease models.
+    Output layer size is inferred from species_mapping.py.
     """
-    from utils.species_mapping import DISEASE_LABELS, SPECIES_TO_MODEL
-
     weights_path = str(weights_path)
 
-    # infer model key (Cassava / Rice / PlantVillage)
+    # Determine model key (Cassava / Rice / PlantVillage)
     model_key = None
     for key, path in SPECIES_TO_MODEL.items():
         if os.path.basename(path) in weights_path:
@@ -78,12 +83,10 @@ def load_disease_model(weights_path: PathLike, device="cpu"):
             break
 
     if model_key is None:
-        model_key = "PlantVillage"   # fallback
+        model_key = "PlantVillage"  # fallback
 
     num_classes = len(DISEASE_LABELS[model_key])
 
     model = load_vit_model(weights_path, num_classes=num_classes)
     model.to(device)
     return model
-
-

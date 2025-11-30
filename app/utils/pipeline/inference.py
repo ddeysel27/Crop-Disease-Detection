@@ -5,6 +5,8 @@ import torchvision.transforms.functional as TF
 import random
 import numpy as np
 from utils.explainability.gradcam_pp import GradCAMPP
+import os
+import pandas as pd
 
 
 
@@ -33,6 +35,7 @@ class InferencePipeline:
             key: load_disease_model(path, device=self.device)
             for key, path in SPECIES_TO_MODEL.items()
         }
+
 
         # YOLO detector
         self.detector = LeafDetector("models/yolo_plantdoc_detect.pt")
@@ -139,7 +142,7 @@ class InferencePipeline:
         return mean_pred, entropy
 
 
-    # Main preeict funtion that runs when in 02_Upload_and_Classify
+    # Main predict funtion that runs when in 02_Upload_and_Classify
     def predict(self, image: Image.Image) -> dict:
 
         # ---------------------------------------------------

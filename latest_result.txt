@@ -1,2 +1,2 @@
-Species: Pepper,_bell
-Disease: Pepper, Bell Bacterial Spot
+Species: Apple
+Disease: Apple Black Rot

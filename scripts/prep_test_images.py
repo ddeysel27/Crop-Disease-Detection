@@ -1,85 +1,170 @@
 import os
-import random
+import cv2
 import shutil
+import pandas as pd
 
-# --------------------------------------------------
+# ============================================================
 # CONFIG
-# --------------------------------------------------
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, ".."))
+# ============================================================
 
-OUTPUT_DIR = os.path.join(ROOT_DIR, "tests", "test_images")
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+print("Using PROJECT_ROOT:", PROJECT_ROOT)
+
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, "tests", "test_images")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-N_IMAGES_PER_CLASS = 2   # choose how many per class to copy
+TOP_K = 5   # select top 5 images per disease
 
 
-# --------------------------------------------------
-# DATASET PATHS (YOUR EXACT STRUCTURE)
-# --------------------------------------------------
-DATASETS = {
-    "cassava": os.path.join(ROOT_DIR, "data", "processed", "cassava", "test"),
-    "riceleaf": os.path.join(ROOT_DIR, "data", "processed", "riceleaf", "test"),
-    "plantVillage": os.path.join(ROOT_DIR, "data", "processed", "plantVillage", "test"),
+# ============================================================
+# QUALITY SCORING
+# ============================================================
+def score_image_quality(path):
+    """Compute a weighted image quality score based on sharpness, brightness, contrast."""
+    try:
+        img = cv2.imread(path, cv2.IMREAD_COLOR)
+        if img is None:
+            return -1
 
-    # PlantDoc special case: images/ contains jpg/png
-    "PlantDoc": os.path.join(ROOT_DIR, "data", "processed", "PlantDoc", "test", "images"),
-}
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-def is_image(f):
-    return f.lower().endswith((".jpg", ".jpeg", ".png"))
+        sharpness = cv2.Laplacian(gray, cv2.CV_64F).var()
+        brightness = gray.mean()
+        contrast = gray.std()
+
+        # Weighted score
+        return 0.6 * sharpness + 0.2 * brightness + 0.2 * contrast
+
+    except Exception:
+        return -1
 
 
-# --------------------------------------------------
-# SCRIPT
-# --------------------------------------------------
+# ============================================================
+# GATHER IMAGES FROM LABEL CSV (each dataset has unique format)
+# ============================================================
+def gather_images(dataset_name, csv_path):
+    df = pd.read_csv(csv_path)
+    records = []
 
-print("\n Saving sample test images to:", OUTPUT_DIR)
+    # Cassava & RiceLeaf have split column → filter test
+    if "split" in df.columns:
+        df = df[df["split"] == "test"]
 
-for dataset_name, path in DATASETS.items():
+    for _, row in df.iterrows():
 
-    print(f"\nDataset: {dataset_name}")
-    if not os.path.exists(path):
-        print(f"  ⚠️ Path not found: {path}")
-        continue
+        # ----------------------------------------------------
+        # RICELEAF FORMAT (has full filepath)
+        # ----------------------------------------------------
+        if dataset_name.lower() == "riceleaf" and "filepath" in df.columns:
+            img_path = row["filepath"]
+            label = row["label"]
 
-    # --------------------------------------------------
-    # PlantDoc: images folder → no class subdivision
-    # --------------------------------------------------
-    if dataset_name == "PlantDoc":
-        imgs = [f for f in os.listdir(path) if is_image(f)]
-        sample = random.sample(imgs, min(len(imgs), N_IMAGES_PER_CLASS * 3))
+        # ----------------------------------------------------
+        # CASSAVA FORMAT (image_id only, need to reconstruct path)
+        # ----------------------------------------------------
+        elif dataset_name.lower() == "cassava" and "image_id" in df.columns:
+            image_id = row["image_id"]
+            label = row["label_name"]
 
-        for img in sample:
-            src = os.path.join(path, img)
-            dst = os.path.join(OUTPUT_DIR, f"{dataset_name}_{img}")
-            shutil.copy(src, dst)
+            # cassava folder path: data/processed/Cassava/test/<label>/<image_id>
+            cassava_root = os.path.join(PROJECT_ROOT, "data", "processed", "Cassava", "test")
+            img_path = os.path.join(cassava_root, label, image_id)
 
-        print(f"  ✔ Copied {len(sample)} PlantDoc images.")
-        continue
+        # ----------------------------------------------------
+        # PLANTVILLAGE FORMAT (full filepath)
+        # ----------------------------------------------------
+        elif dataset_name.lower() == "plantvillage" and "filepath" in df.columns:
+            img_path = row["filepath"]
+            label = row["label"]
 
-    # --------------------------------------------------
-    # Other datasets: class folders → sample per class
-    # --------------------------------------------------
-    for class_name in os.listdir(path):
-        class_path = os.path.join(path, class_name)
-
-        if not os.path.isdir(class_path):
+        else:
+            print(f"⚠️ Skipping unsupported row format in {dataset_name}")
             continue
 
-        imgs = [f for f in os.listdir(class_path) if is_image(f)]
-        if len(imgs) == 0:
+        # ensure exists
+        if not os.path.exists(img_path):
+            # Skip quietly if missing
             continue
 
-        sample = random.sample(imgs, min(N_IMAGES_PER_CLASS, len(imgs)))
+        records.append({
+            "dataset": dataset_name,
+            "label": label,
+            "image": img_path
+        })
 
-        for img in sample:
-            src = os.path.join(class_path, img)
-            dst_name = f"{dataset_name}_{class_name}_{img}"
-            dst = os.path.join(OUTPUT_DIR, dst_name)
-            shutil.copy(src, dst)
+    return records
 
-        print(f" {class_name}: {len(sample)} images copied.")
 
-print("\n DONE! Check folder:")
-print("   →", OUTPUT_DIR)
+# ============================================================
+# SELECT BEST IMAGES BASED ON QUALITY
+# ============================================================
+def select_best_images(records, top_k=TOP_K):
+    if not records:
+        return []
+
+    df = pd.DataFrame(records)
+    df["quality"] = df["image"].apply(score_image_quality)
+
+    selected = []
+
+    for (dataset, label), group in df.groupby(["dataset", "label"]):
+        group_sorted = group.sort_values("quality", ascending=False)
+        top_rows = group_sorted.head(top_k)
+
+        for _, row in top_rows.iterrows():
+            selected.append(row.to_dict())
+
+    return selected
+
+
+# ============================================================
+# MAIN EXECUTION
+# ============================================================
+if __name__ == "__main__":
+
+    DATASETS = {
+        "Cassava": os.path.join(PROJECT_ROOT, "data", "processed", "Cassava", "labels.csv"),
+        "RiceLeaf": os.path.join(PROJECT_ROOT, "data", "processed", "Rice", "labels.csv"),
+        "PlantVillage": os.path.join(PROJECT_ROOT, "data", "processed", "PlantVillage", "labels.csv"),
+        # PlantDoc intentionally EXCLUDED (no test labels)
+    }
+
+    all_records = []
+
+    # ----------------------
+    # Load each dataset CSV
+    # ----------------------
+    for name, csv_path in DATASETS.items():
+        print(f"\nScanning {name}...")
+
+        if not os.path.exists(csv_path):
+            print("Missing:", csv_path)
+            continue
+
+        recs = gather_images(name, csv_path)
+        print(f" Found {len(recs)} labeled images in {name}")
+        all_records.extend(recs)
+
+    # ----------------------
+    # Select best images
+    # ----------------------
+    print("\nSelecting best images...")
+    best = select_best_images(all_records, TOP_K)
+    print(f"  ✔ Selected {len(best)} high-quality images total")
+
+    # ----------------------
+    # Save images
+    # ----------------------
+    print("\nSaving to:", OUTPUT_DIR)
+
+    for rec in best:
+        src = rec["image"]
+        base = os.path.basename(src)
+        dst = os.path.join(
+            OUTPUT_DIR,
+            f"{rec['dataset']}_{rec['label']}_{base}"
+        )
+        shutil.copy(src, dst)
+
+    print("\nDONE! Check folder:")
+    print("  →", OUTPUT_DIR)
