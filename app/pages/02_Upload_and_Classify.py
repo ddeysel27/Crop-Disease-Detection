@@ -13,9 +13,6 @@ if "last_result" not in st.session_state:
 
 
 st.set_page_config(page_title="Upload & Classify", layout="wide")
-st.sidebar.title("📤 Upload & Classify")
-st.sidebar.write("Upload a leaf image to detect species and disease.")
-
 st.title("🌿 Upload & Classify")
 st.write("Upload a plant leaf image and let the AI identify the species and any possible diseases.")
 
@@ -29,24 +26,6 @@ def load_pipeline():
     return st.session_state.pipeline
 
 pipeline = load_pipeline()
-
-# ------------------------------------------------------
-# IF PREVIOUS RESULT EXISTS, RESTORE IT
-# ------------------------------------------------------
-if st.session_state.last_result is not None:
-    st.info("Restoring your previous classification session…")
-
-    img = st.session_state.last_uploaded_image
-    result = st.session_state.last_result
-
-    # Render everything
-    st.image(img, caption="Uploaded Image", use_column_width=False)
-    st.markdown("---")
-
-    # … then paste the whole rendering code
-    # YOLO box, crop, species, disease card, uncertainty, heatmap, etc.
-    # EXACT SAME CODE YOU USE AFTER prediction
-
 
 # ------------------------------------------------------
 # FILE UPLOADER

@@ -1,2 +1,2 @@
-Species: Grape
-Disease: Grape Leaf Blight Isariopsis Leaf Spot
+Species: Cassava
+Disease: Cassava Brown Streak Disease Cbsd
