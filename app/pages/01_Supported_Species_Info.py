@@ -41,53 +41,39 @@ def img_to_base64(path: str) -> str:
         return base64.b64encode(f.read()).decode()
 
 
-st.markdown("""
+# -----------------------------
+# CSS to enable hover image preview
+# -----------------------------
+css = """
 <style>
-.species-wrapper {
+.species-button {
     position: relative;
 }
 
-.species-btn {
-    width: 100%;
-    padding: 8px 16px;
-    background: #0b1220;
-    border: 1px solid #1f2937;
-    border-radius: 12px;
-    color: #e5e7eb;
-    font-size: 0.95rem;
-    text-align: center;
-    cursor: pointer;
+.species-button:hover .preview-image {
+    opacity: 1;
 }
 
-.species-btn:hover {
-    border-color: #38bdf8;
-    background: #0f172a;
-}
-
-/* Hover image */
 .preview-image {
     position: absolute;
-    top: 115%;
+    top: 110%;
     left: 50%;
     transform: translateX(-50%);
     width: 180px;
     height: 180px;
-    border-radius: 12px;
+    border-radius: 14px;
+    border: 1px solid #1f2937;
     background-size: cover;
     background-position: center;
-    border: 1px solid #1f2937;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.15s ease-out;
-    box-shadow: 0 18px 40px rgba(0,0,0,0.65);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.65);
     z-index: 9999;
 }
-
-.species-wrapper:hover .preview-image {
-    opacity: 1;
-}
 </style>
-""", unsafe_allow_html=True)
+"""
+st.markdown(css, unsafe_allow_html=True)
 
 # -----------------------------
 # GRID BUTTONS USING REAL STREAMLIT BUTTONS
@@ -100,35 +86,25 @@ for i, (label, key) in enumerate(species_data):
     col = cols[i % 4]
 
     with col:
-      img_path = os.path.join(IMAGE_FOLDER, f"{key}.JPG")
-      preview_html = ""
+        img_path = os.path.join(IMAGE_FOLDER, f"{key}.JPG")
+        img_html = ""
 
-      if os.path.exists(img_path):
-         b64 = img_to_base64(img_path)
-         preview_html = f"""
-               <div class="preview-image"
-                  style="background-image:url('data:image/jpeg;base64,{b64}')"></div>
-         """
+        if os.path.exists(img_path):
+            b64 = img_to_base64(img_path)
+            img_html = f"""
+                <div class="preview-image" style="background-image:url('data:image/jpeg;base64,{b64}')"></div>
+            """
 
-      # HTML version – hover works and click triggers Streamlit
-      html = f"""
-      <div class="species-wrapper">
-         <button class="species-btn" onclick="document.getElementById('species_{key}').click()">
-            {label}
-         </button>
+        # wrapper div (allows hover)
+        st.markdown(f"<div class='species-button'>", unsafe_allow_html=True)
 
-         <div class="preview-image" 
-               style="background-image:url('data:image/jpeg;base64,{b64}')">
-         </div>
+        # REAL Streamlit button → works 100%
+        if st.button(label, key=f"btn_{key}"):
+            selected_species = key
 
-         <form method="post">
-            <input id="species_{key}" type="submit" name="species" value="{key}" style="display:none;">
-         </form>
-      </div>
-      """
-
-      st.markdown(html, unsafe_allow_html=True)
-
+        # attach preview image
+        st.markdown(img_html, unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # -----------------------------
 # Show species info
