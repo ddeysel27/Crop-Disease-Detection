@@ -11,13 +11,17 @@ HERO_PATH = "C:/Users/User/Desktop/temp/welcome_page.jpg"  # change name if need
 
 st.image(
     HERO_PATH,
-    use_column_width=True,
+    width=900
 )
 
 # ---------- INTRO TEXT ----------
 st.write("""
 Welcome to **Crop Doctor**, your intelligent companion for diagnosing plant diseases
-directly from a photo. Whether you're a farmer, researcher, gardener, or student,
+directly from a photo. Whether you're a farmer, researcher,
+""")
+         
+st.write("""
+gardener, or student,
 this tool helps you quickly identify **species**, detect **diseases**, and understand
 your plant’s health in seconds.
 """)

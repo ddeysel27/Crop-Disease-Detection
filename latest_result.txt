@@ -1,2 +1,2 @@
 Species: Cassava
-Disease: Cassava Brown Streak Disease Cbsd
+Disease: Cassava Bacterial Blight Cbb

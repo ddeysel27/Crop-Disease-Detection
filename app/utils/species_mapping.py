@@ -59,10 +59,29 @@ SPECIES_TO_MODEL = {
 # MAP SPECIES → DISEASE LABELS
 # ----------------------------------------------------
 DISEASE_LABELS = {
-    "Cassava": CASSAVA_LABELS,
-    "Rice": RICE_LABELS,
-    "PlantVillage": PLANTVILLAGE_LABELS,
+    "Apple": ["Apple Scab", "Black Rot", "Cedar Rust"],
+    "Blueberry": ["Healthy"], 
+    "Cassava": ["CBB", "CBSD", "CGM", "CMD"],
+    "Cherry": ["Healthy"],
+    "Corn": ["Common Rust", "Northern Leaf Blight", "Gray Leaf Spot"],
+    "Grape": ["Black Rot", "Black Measles", "Leaf Blight"],
+    "Orange": ["Citrus Greening"],
+    "Peach": ["Bacterial Spot"],
+    "Pepperbell": ["Bacterial Spot"],
+    "Potato": ["Early Blight", "Late Blight"],
+    "Raspberry": ["Healthy"],
+    "Rice": ["Brown Spot", "Leaf Blight", "Neck Blast"],
+    "Soybean": ["Healthy"],
+    "Squash": ["Powdery Mildew"],
+    "Strawberry": ["Leaf Scorch"],
+    "Tomato": [
+        "Bacterial Spot", "Early Blight", "Late Blight",
+        "Leaf Mold", "Septoria", "Spider Mites",
+        "Target Spot", "Yellow Leaf Curl Virus",
+        "Mosaic Virus", "Healthy"
+    ],
 }
+
 
 # ----------------------------------------------------
 # CLASS COUNTS

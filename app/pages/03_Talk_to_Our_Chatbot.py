@@ -7,7 +7,7 @@ import os
 #                      PAGE SETUP
 # =========================================================
 st.set_page_config(page_title="Crop Care Assistant", layout="wide")
-st.title("🤖 Talk To Our Chatbot")
+st.title("Talk To Our Chatbot")
 st.write("Ask questions about your plant diagnosis, treatment steps, or prevention tips.")
 
 # =========================================================
