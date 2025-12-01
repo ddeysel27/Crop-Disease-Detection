@@ -11,7 +11,7 @@ def run_llm(prompt):
     api_key = os.getenv("OPENAI_API_KEY")
 
     if not api_key:
-        return "❌ ERROR: OPENAI_API_KEY not found. Make sure it is in your .env file."
+        return " ERROR: OPENAI_API_KEY not found. Make sure it is in your .env file."
 
     client = OpenAI(api_key=api_key)
 

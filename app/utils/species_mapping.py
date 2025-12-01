@@ -1,30 +1,28 @@
 import os
 
 # ----------------------------------------------------
-# Resolve project root no matter where file is called
+# Resolve project root (works no matter where imported)
 # ----------------------------------------------------
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-def p(rel_path):
+def p(rel_path: str) -> str:
     """Build absolute paths relative to project root."""
     return os.path.join(PROJECT_ROOT, rel_path)
 
 # ----------------------------------------------------
-# DATASET FOLDERS
+# DATASET FOLDERS (train splits used to get class names)
 # ----------------------------------------------------
 CASSAVA_PATH = p("data/processed/Cassava/train")
 RICE_PATH = p("data/processed/Rice/train")
 PLANTVILLAGE_PATH = p("data/processed/PlantVillage/train")
 
-# ----------------------------------------------------
-# LOAD DISEASE LABEL FOLDERS
-# ----------------------------------------------------
+# Class labels come directly from folder names (correct order)
 CASSAVA_LABELS = sorted(os.listdir(CASSAVA_PATH))
 RICE_LABELS = sorted(os.listdir(RICE_PATH))
 PLANTVILLAGE_LABELS = sorted(os.listdir(PLANTVILLAGE_PATH))
 
 # ----------------------------------------------------
-# SPECIES LIST
+# SPECIES LIST (MUST match species classifier training order)
 # ----------------------------------------------------
 SPECIES_LIST = [
     "Apple",
@@ -35,7 +33,7 @@ SPECIES_LIST = [
     "Grape",
     "Orange",
     "Peach",
-    "Pepper,_bell",
+    "Pepper_bell",
     "Potato",
     "Raspberry",
     "Rice",
@@ -45,46 +43,40 @@ SPECIES_LIST = [
     "Tomato",
 ]
 
+# ----------------------------------------------------
+# SPECIES → DISEASE MODEL KEY
+# (three model keys: 'Cassava', 'Rice', 'PlantVillage')
+# ----------------------------------------------------
+SPECIES_TO_MODEL_KEY = {
+    "Cassava": "Cassava",
+    "Rice": "Rice",
+}
+
+# All non-Cassava, non-Rice species → PlantVillage model
+for sp in SPECIES_LIST:
+    if sp not in SPECIES_TO_MODEL_KEY:
+        SPECIES_TO_MODEL_KEY[sp] = "PlantVillage"
 
 # ----------------------------------------------------
-# MAP SPECIES → MODEL WEIGHTS
+# DISEASE MODEL FILE PATHS (three models total)
 # ----------------------------------------------------
-SPECIES_TO_MODEL = {
+DISEASE_MODEL_PATHS = {
     "Cassava": p("models/cassava_best.pth"),
     "Rice": p("models/rice_leaf_best.pth"),
     "PlantVillage": p("models/plant_village_best.pth"),
 }
 
 # ----------------------------------------------------
-# MAP SPECIES → DISEASE LABELS
+# MODEL KEY → DISEASE LABELS (class names for each model)
 # ----------------------------------------------------
 DISEASE_LABELS = {
-    "Apple": ["Apple Scab", "Black Rot", "Cedar Rust"],
-    "Blueberry": ["Healthy"], 
-    "Cassava": ["CBB", "CBSD", "CGM", "CMD"],
-    "Cherry": ["Healthy"],
-    "Corn": ["Common Rust", "Northern Leaf Blight", "Gray Leaf Spot"],
-    "Grape": ["Black Rot", "Black Measles", "Leaf Blight"],
-    "Orange": ["Citrus Greening"],
-    "Peach": ["Bacterial Spot"],
-    "Pepperbell": ["Bacterial Spot"],
-    "Potato": ["Early Blight", "Late Blight"],
-    "Raspberry": ["Healthy"],
-    "Rice": ["Brown Spot", "Leaf Blight", "Neck Blast"],
-    "Soybean": ["Healthy"],
-    "Squash": ["Powdery Mildew"],
-    "Strawberry": ["Leaf Scorch"],
-    "Tomato": [
-        "Bacterial Spot", "Early Blight", "Late Blight",
-        "Leaf Mold", "Septoria", "Spider Mites",
-        "Target Spot", "Yellow Leaf Curl Virus",
-        "Mosaic Virus", "Healthy"
-    ],
+    "Cassava": CASSAVA_LABELS,          # 5 classes
+    "Rice": RICE_LABELS,                # 6 classes (from your screenshot)
+    "PlantVillage": PLANTVILLAGE_LABELS,  # ~38 classes
 }
 
-
 # ----------------------------------------------------
-# CLASS COUNTS
+# CLASS COUNTS (useful for debugging / sanity checks)
 # ----------------------------------------------------
 SPECIES_NUM_CLASSES = {
     "Cassava": len(CASSAVA_LABELS),

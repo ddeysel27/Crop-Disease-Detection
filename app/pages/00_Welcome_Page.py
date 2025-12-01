@@ -1,16 +1,13 @@
 import streamlit as st
 
-# MUST be first Streamlit call
 st.set_page_config(page_title="Welcome", layout="wide")
 
-st.title("Crop Doctor — AI-Powered Plant Health Assistant")
+st.title("Smarter Agriculture Through Vision & AI")
 
-# ---------- HERO IMAGE / GIF ----------
-# Place your file at: app/assets/hero_crop_doctor.gif (or .png)
-HERO_PATH = "C:/Users/User/Desktop/temp/welcome_page.jpg"  # change name if needed
 
+I_PATH = "C:/Users/User/Desktop/temp/welcome_page.jpg"  
 st.image(
-    HERO_PATH,
+    I_PATH,
     width=900
 )
 

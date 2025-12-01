@@ -1,2 +1,5 @@
-Species: Cassava
-Disease: Cassava Bacterial Blight Cbb
+Species: Corn_(maize)
+Disease: Corn Maize Common Rust
+Species_Confidence: 0.9998
+Disease_Confidence_Fused: 1.0000
+Uncertainty_Fused: 0.0001
