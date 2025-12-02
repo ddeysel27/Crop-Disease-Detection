@@ -14,7 +14,7 @@ Users can upload a leaf image and instantly receive:
 
 ## 🚀 Demo Video
 ## 🎥 Demo Video
-[![Demo Video]](https://www.youtube.com/watch?v=https://youtu.be/6DOHdqP1464)
+[![Demo Video]](hhttps://youtu.be/6DOHdqP1464)
 
 ---
 
