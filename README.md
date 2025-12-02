@@ -1,232 +1,347 @@
-# Crop Disease Detection — AI for Early Plant Health Diagnostics
-From Leaf Images to Actionable Insights — Bridging Machine Learning and Real-World Agriculture
-### Overview
+🌱 Crop Disease Detection — End-to-End AI System
 
-Crop Disease Detection is a complete AI system for analyzing plant leaf images, identifying the species, detecting diseases, and presenting actionable information to the user.
+An advanced multi-model AI pipeline combining Vision Transformers (ViT) for plant species + disease classification, LLM-powered agronomy assistance, and a RAG knowledge retrieval system, deployed in a clean and interactive Streamlit application.
 
-The platform combines:
+Users can upload a leaf image and instantly receive:
 
-Computer vision models (Vision Transformers + YOLO detector)
+✔ Predicted plant species
 
-Retrieval-augmented knowledge search
+✔ Predicted disease class (auto-routed to the correct model)
 
-Conversational LLMs for treatment advice
+✔ Confidence scores
 
-A Streamlit application for user-friendly interaction
+✔ LLM-generated biological explanation + treatment guidance
 
-The goal is to support farmers, agronomists, and agricultural extension officers with fast, trustworthy, and accessible plant-health diagnostics.
+✔ A RAG chatbot grounded in scientific literature
 
-### System Architecture
-1. Image Processing
+🚀 Demo Video
 
-YOLO Detector (optional preprocessing)
+(Insert your Clipchamp video link here once uploaded. GitHub will auto-embed YouTube/Vimeo links.)
 
-Used to detect and isolate leaf regions
+📌 Features
+🔍 1. Vision Transformer–Based Classification
 
-Helps improve classification on noisy images
+Species classifier (ViT-Base)
 
-Data Augmentation using Albumentations
+Multiple disease classifiers (Cassava, RiceLeaf, PlantVillage)
 
-Lighting variations
+Transfer learning + fine-tuning
 
-Rotations, flips
+Consistent preprocessing pipeline
 
-Blur / contrast adjustments
+🧠 2. Two-Stage ML Architecture
 
-Increases model robustness
+Stage 1: Predict species
 
-(Segmentation will be added in future versions.)
+Stage 2: Dynamically load the correct disease model
 
-2. Classification Pipeline
+Modular, production-style inference design
 
-Your system uses two-stage classification:
+📚 3. RAG-Powered Agriculture Chatbot
 
-a. Species Classification
+FAISS vector search
 
-Vision Transformer (ViT-Base)
+MiniLM sentence embeddings
 
-Trained on your Species_split dataset
-
-Supports >20 species (PlantVillage + Cassava + Rice)
-
-b. Disease Classification
-
-Three specialized models:
-
-Species Group	Model Used
-Cassava	Cassava Disease ViT
-Rice	Rice Disease ViT
-Everything else	PlantVillage Disease ViT
-
-Each model outputs:
-
-Disease label
-
-Confidence score
-
-Calibrated probabilities (temperature scaling ready)
-
-3. Knowledge Retrieval Layer
-
-FAISS vector store for agronomy texts
-
-Sentence-Transformers (MiniLM) for embeddings
-
-Retrieves:
-
-Disease descriptions
-
-Treatment considerations
-
-Cultivation best practices
-
-Preventive measures
-
-4. Conversational LLM Layer
-
-Tiny LLaMA / Mistral (local or HF API)
-
-Converts predictions + retrieved knowledge into:
-
-Simple explanations
-
-Treatment guidance
-
-Step-by-step actions
-
-Warnings/edge cases
-
-The LLM never gives harmful or prescriptive advice; instead it provides neutral, factual, evidence-grounded guidance.
-
-5. User Interface (Streamlit App)
-
-The app includes:
-
-### Upload & Classify
-
-Image preview
-
-Species prediction
-
-Disease prediction
-
-Confidence scoring
-
-Clean label formatting
-
-Plant health assessment
-
-Low-confidence warnings
-
-Retake-photo tips
-
-### Talk to Our Chatbot
-
-Ask for treatment help
-
-Search for similar cases
-
-Retrieve best practices
-
-### Browse Articles
-
-FAISS-powered RAG search
-
-Quickly find relevant agronomy info
-
-### Welcome Page
-
-Explanation of system
-
-Instructions and tips
-
-### Quickstart
-1. Create Environment
+GPT-based reasoning with grounded knowledge
+
+🛠 4. Full Streamlit User Interface
+
+Welcome page with dynamic hover previews
+
+Upload-and-Classify workflow
+
+Chatbot page
+
+Article browser
+
+Clean UI with responsive layout
+
+📊 5. Research-Grade Evaluation Tools
+
+Batch testing notebook
+
+Confusion matrices
+
+Cross-dataset generalization
+
+Error analysis tools
+
+📁 Project Structure
+
+GitHub displays the following tree cleanly as plain text:
+
+CROP-DISEASE-DETECTION/
+├── .venv/
+├── app/
+│   ├── pages/
+│   │   ├── 00_Welcome_Page.py
+│   │   ├── 01_Supported_Species_Info.py
+│   │   ├── 02_Upload_and_Classify.py
+│   │   ├── 03_Talk_to_Our_Chatbot.py
+│   │
+│   ├── species_images/
+│   │   ├── apple.JPG
+│   │   ├── blueberry.JPG
+│   │   ├── cassava.jpg
+│   │   ├── cherry.JPG
+│   │   ├── corn.JPG
+│   │   ├── grape.JPG
+│   │   ├── milkdew.JPG
+│   │   ├── orange.JPG
+│   │   ├── peach.JPG
+│   │   ├── pepperbell.JPG
+│   │   ├── potato.JPG
+│   │   ├── raspberry.JPG
+│   │   ├── rice.jpg
+│   │   ├── soybean.JPG
+│   │   ├── squash.JPG
+│   │   ├── strawberry.JPG
+│   │   ├── tomato.JPG
+│   │
+│   ├── utils/
+│       ├── detection/
+│       │   ├── leaf_detector.py
+│       │
+│       ├── explainability/
+│       │   ├── gradcam_pp.py
+│       │
+│       ├── load_model/
+│       │   ├── __init__.py
+│       │   ├── loaders.py
+│       │
+│       ├── ood/
+│       │   ├── ood_detector.py
+│       │
+│       ├── pipeline/
+│       │   ├── __init__.py
+│       │   ├── inference.py
+│       │
+│       ├── visuals/
+│       │   ├── radar_plot.py
+│       │   ├── uncertainty_badge.py
+│       │
+│       ├── llm_client.py
+│       ├── model_utils.py
+│       ├── species_mapping.py
+│       ├── app.py
+│       ├── config.py
+│
+├── data/
+│   ├── processed/
+│   │   ├── Cassava/
+│   │   ├── PlantDoc/
+│   │   ├── PlantVillage/
+│   │   ├── Rice/
+│   │   ├── Species_split/
+│   │   ├── PlantDoc.zip
+│   │   ├── species_split.zip
+│   │
+│   ├── raw/
+│   │   ├── archive/
+│   │   ├── cassava-leaf-disease-classification/
+│   │   ├── PlantDoc_repo_new/
+│   │   ├── rice-leaf-disease/
+│   │   ├── processed.zip
+│   │   ├── dataset_cards.md
+│   │   ├── welcome_page.jpg
+│
+├── models/
+│   ├── cassava_best.pth
+│   ├── plant_village_best.pth
+│   ├── rice_leaf_best.pth
+│   ├── species_classifier_vit.pth
+│   ├── yolo_plantdoc_detect.pt
+│
+├── notebooks/
+│   ├── 00_explore_dataset_cassava.ipynb
+│   ├── 00_explore_dataset_plantdoc.ipynb
+│   ├── 00_explore_dataset_plantVillage.ipynb
+│   ├── 00_explore_dataset_riceleafs.ipynb
+│   ├── 01_prepare_cassava.ipynb
+│   ├── 01_prepare_plantdoc.ipynb
+│   ├── 01_prepare_plantVillage.ipynb
+│   ├── 01_prepare_riceleaf.ipynb
+│   ├── 01_prepare_splits_preprocess.ipynb
+│   ├── 02_train_cassava.ipynb
+│   ├── 02_train_classifier.ipynb
+│   ├── 02_train_plantdoc.ipynb
+│   ├── 02_train_plantVillage.ipynb
+│   ├── 02_train_riceleafs.ipynb
+│   ├── SPECIES_classifier.ipynb
+│
+├── scripts/
+│   ├── prep_test_images.py
+│
+├── tests/
+│   ├── test_images/
+│   ├── batch_results.csv
+│   ├── evaluate_model.ipynb
+│   ├── inference_pipeline.ipynb
+│   ├── test_classifiers.ipynb
+│
+├── .env
+├── .gitignore
+├── LICENSE
+├── README.md
+├── latest_result.txt
+└── requirements.txt
+
+
+
+This renders perfectly on GitHub because it uses a plain code block instead of indentation markdown.
+
+🔬 Advanced ML Concepts (One Slide Version)
+
+These are the major concepts, already optimized for presentation decks:
+
+Vision Transformers (ViT) for species + disease detection
+
+Two-stage hierarchical classification (species → disease)
+
+Retrieval-Augmented Generation (RAG) with FAISS + MiniLM
+
+LLM integration for explanations and agronomy support
+
+Inference optimization (lazy loading, GPU/CPU detection, transform standardization)
+
+Dataset engineering across multi-source agricultural datasets
+
+Modular MLOps-ready architecture
+
+🛠 Installation
+1. Clone the Repository
+git clone https://github.com/<your-username>/crop-disease-detection.git
+cd crop-disease-detection
+
+2. Create a Virtual Environment
 python -m venv .venv
+source .venv/bin/activate   # Mac/Linux
+.venv\Scripts\activate      # Windows
 
-# Windows
-.\.venv\Scripts\activate
-
-# macOS/Linux
-source .venv/bin/activate
-
+3. Install Dependencies
 pip install -r requirements.txt
 
-2. Prepare Data
+4. Set Your OpenAI API Key
+Option A — Create a .env file:
+OPENAI_API_KEY=your_key_here
 
-Place raw datasets inside:
+Option B — Or export it:
+export OPENAI_API_KEY="your_key_here"
 
-data/raw/
+▶️ Run the Streamlit App
 
+From the project root:
 
-Run preprocessing:
-
-notebooks/01_prepare_splits_preprocess.ipynb
-
-
-Outputs go to:
-
-data/processed/train
-data/processed/val
-data/processed/test
-
-3. Train Species & Disease Models
-python -m src.models.train \
-    --data data/processed \
-    --model vit_base_patch16_224 \
-    --epochs 15 \
-    --img 224
-
-4. Evaluate Models
-
-Open:
-
-notebooks/03_evaluate_report.ipynb
-
-
-Includes accuracy, F1, confusion matrix, attention maps, etc.
-
-5. Launch Streamlit App
 streamlit run app/app.py
 
 
-(Optional: Start your LLM backend like Ollama or HuggingFace Inference API.)
+The app will open with:
 
-### Supported Datasets
-Dataset	Type	Notes
-PlantVillage	Controlled Lab	Multi-crop, >50 classes
-PlantDoc	Field	Noisy real-world images
-Cassava Leaf Disease	Field	5 classes
-Rice Leaf Disease	Field	6 classes
+Welcome Page
 
-Each dataset is documented in:
+Upload & Classify
 
-data/dataset_cards.md
+Chatbot
 
-### Model Summary
-Stage	Model	Output
-Leaf Detection	YOLO	Bounding box
-Augmentation	Albumentations	Robust training images
-Species Classification	ViT-Base	Species label
-Disease Classification	ViT-Base	Disease label
-Retrieval	MiniLM + FAISS	Relevant text
-Conversational Layer	Mistral / TinyLLaMA	Actionable guidance
+Browse Articles
 
-Safety & Ethical Use
+🧪 How to Use the Pipeline
+1️⃣ Upload an image
 
-This platform provides decision support, not certified diagnosis
+You will receive:
 
-Always consult agronomists for pesticide and chemical treatments
+Predicted species
 
-Avoid storing personal identifiable data
+Predicted disease
 
-The LLM is tuned to be factual, neutral, and non-prescriptive
+Confidence scores
 
-Follow all local regulations for crop protection products
+LLM explanation
 
-📚 Citation
+Treatment suggestions
 
-If using this project, please cite:
+2️⃣ Ask the chatbot
 
-Deysel, D. (2025). Crop Disease Detection — From Lab to Field.
-University of Miami, Principles & Practices of AI.
+The RAG pipeline retrieves scientific text → LLM answers reliably.
+
+3️⃣ Browse indexed articles
+
+You can inspect the scientific sources used during conversation.
+
+📊 Model Training
+
+Training notebooks are located in:
+/notebooks/
+
+Each notebook includes:
+
+Dataset loading
+
+Augmentation + preprocessing
+
+ViT fine-tuning
+
+Evaluation
+
+Export of .pth model
+
+To start training:
+
+jupyter notebook
+
+
+Then open any training file.
+
+🎓 Evaluation (Batch Testing)
+
+Use:
+
+notebooks/05_batch_testing.ipynb
+
+
+This notebook provides:
+
+Accuracy
+
+Confusion matrices
+
+Per-species breakdown
+
+Hard-case analysis (blur, rotation, lighting)
+
+Failure-case study for pipeline refinement
+
+🤝 Contributing
+
+Fork the repo
+
+Create a new branch
+
+Make changes
+
+Submit a PR
+
+All contributions are welcome.
+
+📜 License
+
+MIT License (or update as preferred)
+
+🎯 Summary
+
+This repository delivers a production-style multi-model AI system combining:
+
+Deep learning (Vision Transformers)
+
+Generative AI
+
+RAG architecture
+
+Clean deployment (Streamlit)
+
+Modular inference pipeline
+
+Research-quality evaluation
+
+The system is reliable, explainable, scalable, and ready for real-world agricultural use.

@@ -5,7 +5,7 @@ st.set_page_config(page_title="Welcome", layout="wide")
 st.title("Smarter Agriculture Through Vision & AI")
 
 
-I_PATH = "C:/Users/User/Desktop/temp/welcome_page.jpg"  
+I_PATH = "C:/Users/User/Desktop/Data Science/Projects/crop-disease-detection/data/welcome_page.jpg"  
 st.image(
     I_PATH,
     width=900

@@ -103,7 +103,7 @@ if uploaded:
         if result["disease_conf"] < 0.70:
             st.warning("⚠️ Low disease confidence — ensure the leaf is centered, clear and bright.")
         
-        st.markdown("### Model Explainability (RollOut)")
+        st.markdown("### Model Explainability (GradCam)")
         st.image(result["heatmap"], caption="What the model focused on")
 
 

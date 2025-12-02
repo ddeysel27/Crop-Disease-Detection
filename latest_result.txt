@@ -1,5 +1,5 @@
-Species: Tomato
-Disease: Tomato Bacterial Spot
-Species_Confidence: 0.9984
-Disease_Confidence_Fused: 0.9999
-Uncertainty_Fused: 0.0004
+Species: Grape
+Disease: Grape Black Rot
+Species_Confidence: 0.9998
+Disease_Confidence_Fused: 0.9990
+Uncertainty_Fused: 0.0052
