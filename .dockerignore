@@ -1,0 +1,41 @@
+# Ignore virtual environments
+.venv/
+venv/
+env/
+
+# Ignore datasets (training not needed in container)
+data/
+datasets/
+processed/
+PlantDoc/
+!data/welcome_page.jpg
+
+
+# Ignore YOLO training outputs
+runs/
+checkpoints/
+weights/
+
+# Ignore large raw files
+*.pt
+*.pth
+*.ckpt
+
+# Unless they are in models folder:
+!models/*.pt
+!models/*.pth
+
+# Ignore notebooks
+*.ipynb
+
+# Ignore cache
+__pycache__/
+*.pyc
+*.pyo
+
+# System artifacts
+.DS_Store
+
+# Git files
+.git/
+.gitignore
