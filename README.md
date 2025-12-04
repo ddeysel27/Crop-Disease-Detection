@@ -59,7 +59,7 @@ Modular, production-ready design.
 
 ---
 
-# 🔬 Advanced ML Concepts (One Slide Version)
+# 🔬 Advanced ML Concepts
 
 ### These are the major concepts, already optimized for presentation decks:
 
