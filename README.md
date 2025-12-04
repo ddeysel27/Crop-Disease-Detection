@@ -11,8 +11,6 @@ Users can upload a leaf image and instantly receive:
 - ✔ **A RAG chatbot grounded in scientific literature**
 
 ---
-
-## 🚀 Demo Video
 ## 🎥 Demo Video
 [![Demo Video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=https://youtu.be/6DOHdqP1464)
 
