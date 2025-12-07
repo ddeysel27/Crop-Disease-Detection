@@ -1,175 +1,233 @@
-# 🌱 Crop Disease Detection — End-to-End AI System
+# Crop Disease Detection — End-to-End AI System
 
-An advanced multi-model AI pipeline combining **Vision Transformers (ViT)** for plant species + disease classification, **LLM-powered agronomy assistance**, and a **RAG knowledge retrieval system**, deployed in a clean and interactive **Streamlit** application.
+This repository contains a modular, production-ready system for detecting plant species and leaf diseases using:
 
-Users can upload a leaf image and instantly receive:
+- Vision Transformers (ViT) for species and disease classification
+- A hierarchical three-stage inference pipeline
+- A Retrieval-Augmented Generation (RAG) agronomy assistant
+- A clean and interactive Streamlit application
+- A knowledge-grounded chatbot for treatment recommendations and biological insights
 
-- ✔ **Predicted plant species**
-- ✔ **Predicted disease class** (auto-routed to the correct model)
-- ✔ **Confidence scores**
-- ✔ **LLM-generated biological explanation + treatment guidance**
-- ✔ **A RAG chatbot grounded in scientific literature**
+Users can upload a leaf image and receive:
 
----
-## 🎥 Demo Video
-[![Demo Video](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=https://youtu.be/6DOHdqP1464)
-
----
-
-# 📌 Features
-
-## 🔍 1. Vision Transformer–Based Classification
-- ViT-Base species classifier  
-- Cassava, RiceLeaf, and PlantVillage disease classifiers  
-- Transfer learning + fine-tuning  
-- Consistent preprocessing pipeline  
-
----
-
-## 🧠 2. Three-Stage ML Architecture
-**Stage 1:** Leaf Detection
-**Stage 2:** Predict species  
-**Stage 3:** Load correct disease model and predict disease
-
-Modular, production-ready design.
-
----
-
-## 📚 3. RAG-Powered Agriculture Chatbot
-- FAISS vector search  
-- MiniLM embeddings  
-- GPT-based grounded reasoning  
-- llama local response (install ollama separately)
-
----
-
-## 🛠 4. Streamlit Web Application
-- Welcome page with hover previews  
-- Upload-and-classify workflow  
-- Chatbot assistant    
-- Clean, modern UI  
-
----
-
-## 📊 5. Evaluation Tools
-- Accuracy
-- TTA  
-- Heatmap
-- Cross-dataset generalization  
-
----
-
-# 🔬 Advanced ML Concepts
-
-### These are the major concepts, already optimized for presentation decks:
-
-- Vision Transformers (ViT) for species + disease detection
-
-- Two-stage hierarchical classification (species → disease)
-
-- Retrieval-Augmented Generation (RAG) with FAISS + MiniLM
-
-- LLM integration for explanations and agronomy support
-
-- Inference optimization (lazy loading, GPU/CPU detection, transform standardization)
-
-- Dataset engineering across multi-source agricultural datasets
-
-# Modular MLOps-ready architecture
-
-# 🛠 Installation
-1. Clone the Repository
-git clone https://github.com/<ddeysel27>/crop-disease-detection.git
-cd crop-disease-detection
-
-2. Create a Virtual Environment
-python -m venv .venv
-source .venv/bin/activate   # Mac/Linux
-.venv\Scripts\activate      # Windows
-
-3. Install Dependencies
-pip install -r requirements.txt
-
-4. Set Your OpenAI API Key
-Option A — Create a .env file:
-OPENAI_API_KEY=your_key_here
-
-Option B — Or export it:
-export OPENAI_API_KEY="your_key_here"
-
-# ▶️ Run the Streamlit App
-
-#### From the project root:
-
-streamlit run app/app.py
-
-
-#### The app will open with:
-
-1. Welcome Page
-2. Upload & Classify
-3. Chatbot
-4. Browse Articles
-
-#  How to Use the Pipeline
-### Scout the differnt species
-When you click a specie button you will see:
-
-- A sample image of the species leaf
-- A gpt description of the species selected and diseases on database
-
-### Upload an image
-
-You will receive:
-
-- Predicted species
-- Predicted disease
+- Predicted plant species
+- Predicted disease class (automatically routed to the correct model)
 - Confidence scores
-- Heatmap
+- Model explanations and treatment guidance via an LLM
+- Scientifically grounded RAG responses
 
-#### Ask the chatbot
+---
 
-The RAG pipeline retrieves scientific text → LLM answers reliably.
+## 1. Project Overview
 
-# Model Training
+This project integrates computer vision, RAG-based NLP, and interactive UI design to create a practical tool for agricultural diagnostics.
+
+The system includes:
+
+- Vision Transformer classification models
+- Three-stage hierarchical inference
+- RAG pipeline with FAISS and MiniLM
+- LLM reasoning for agronomy support
+- Streamlit deployment
+- Reproducible model training and evaluation workflows
+
+The architecture is designed to be modular, interpretable, and scalable.
+
+---
+
+## 2. System Architecture
+```bash
+Leaf Image ──► Preprocessing ──► Species Classifier (ViT)
+│
+▼
+Auto-select disease model based on species
+│
+▼
+Disease Classifier (ViT)
+│
+▼
+Results + Confidence Scores
+│
+├────────► LLM Explanation
+│
+└────────► RAG Chatbot Response
+```
+
+
+---
+
+## 3. Vision Transformer Classification
+
+### 3.1 Species Classification
+- ViT-Base model trained on multi-species datasets
+- Image normalization and standardized transforms
+- High recall for routing to correct disease model
+
+### 3.2 Disease Classification
+- Separate ViT-Base models for:
+  - Cassava diseases
+  - RiceLeaf diseases
+  - PlantVillage diseases
+- Fine-tuned using transfer learning
+- Consistent preprocessing across all models
+
+---
+
+## 4. Three-Stage ML Architecture
+
+Stage 1: Leaf Detection  
+Stage 2: Species Classification  
+Stage 3: Automatic load of correct disease model and disease prediction  
+
+This modular routing architecture enables scalability to new species and diseases without retraining the entire system.
+
+---
+
+## 5. Retrieval-Augmented Generation (RAG)
+
+- FAISS vector store indexing agricultural research text
+- MiniLM embeddings for efficient retrieval
+- LLM-generated explanations grounded in retrieved context
+- Optional support for local models via Ollama
+
+The RAG component ensures biologically accurate, citation-backed responses.
+
+---
+
+## 6. Streamlit Application
+
+### Features include:
+
+- Welcome page with species previews
+- Upload-and-classify workflow
+- Real-time prediction with confidence scores
+- Heatmap visualization (optional Grad-CAM)
+- RAG-backed chatbot for treatment recommendations
+- A clean, modular UI
+
+---
+
+## 7. Evaluation and Testing
+
+### Tools include:
+
+- Accuracy metrics
+- Test-Time Augmentation (TTA)
+- Cross-dataset generalization checks
+- Confusion matrices
+- Heatmap visualization for explainability
+
+### Full evaluation notebook available in:
+```bash
+tests/evaluate_model.ipynb
+```
+
+---
+
+## 8. Installation
+
+### Clone the repository:
+```bash
+git clone https://github.com/
+<ddeysel27>/crop-disease-detection.git
+cd crop-disease-detection
+```
+
+### Create a virtual environment:
+```bash
+python -m venv .venv
+```
+
+### Activate environment:
+```bash
+Windows:   .\.venv\Scripts\activate
+
+Mac/Linux: source .venv/bin/activate
+```
+
+### Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+### Set OpenAI API key:
+```bash
+Option A (preferred):
+Create a .env file containing:
+OPENAI_API_KEY=your_key_here
+```
+
+### Option B:
+```bash
+export OPENAI_API_KEY="your_key_here"
+```
+---
+
+## 9. Running the Application
+
+### From the project root:
+```bash
+streamlit run app/app.py
+```
+
+### The app contains:
+
+1. Welcome Page  
+2. Upload and Classify  
+3. Chatbot  
+4. Scientific Article Browser  
+
+---
+
+## 10. Training
 
 Training notebooks are located in:
+```bash
 /notebooks/
+```
 
 ### Each notebook includes:
 
 - Dataset loading
-- Augmentation + preprocessing
+- Augmentation and preprocessing
 - ViT fine-tuning
-- Evaluation
-- Export of .pth model
+- Model evaluation
+- Export of .pth weights
 
-### To start training:
-
+To begin training:
+```bash
 jupyter notebook
-Then open any training file.
+```
+Open any training notebook.
 
-# Model Evaluation 
+---
 
-Use:
+## 11. Model Evaluation
 
-tests/evaluate_model.ipynb on full tests from each dataset
-
-
-# This notebook provides:
+### Use:
+```bash
+tests/evaluate_model.ipynb
+```
+This notebook provides:
 
 - Accuracy
 - Confusion matrices
+- TTA performance
+- Cross-dataset generalization results
 
-# 🤝 Contributing
+---
 
-- Fork the repo
-- Create a new branch
-- Make changes
-- Submit a PR
+## 12. Contributing
 
-All contributions are welcome.
+1. Fork the repository  
+2. Create a new branch  
+3. Make changes  
+4. Submit a pull request  
 
-# 📜 License
+Contributions of new species, diseases, or model improvements are encouraged.
 
-MIT License 
+---
+
+## 13. License
+
+This project is released under the MIT License.
