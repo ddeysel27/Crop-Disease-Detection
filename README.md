@@ -154,8 +154,7 @@ tests/evaluate_model.ipynb
 
 ### Clone the repository:
 ```bash
-git clone https://github.com/
-<ddeysel27>/crop-disease-detection.git
+git clone https://github.com/<ddeysel27>/crop-disease-detection.git
 cd crop-disease-detection
 ```
 
