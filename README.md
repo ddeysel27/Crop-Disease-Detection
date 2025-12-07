@@ -35,15 +35,18 @@ The architecture is designed to be modular, interpretable, and scalable.
 
 ---
 
-## 2. System Architecture
+## 2. Pipeline Architecture
 ```bash
 Leaf Image ──► Preprocessing ──► Species Classifier (ViT)
 │
 ▼
-Auto-select disease model based on species
+Leaf Detection Model (YOLO) Returns bounding boxes and return cropped area
 │
 ▼
-Disease Classifier (ViT)
+Species Classifier (ViT)│   Routes to correct Disease Classifier
+│
+▼
+Disease Classifier (ViT)    Returns disease
 │
 ▼
 Results + Confidence Scores
@@ -51,6 +54,29 @@ Results + Confidence Scores
 ├────────► LLM Explanation
 │
 └────────► RAG Chatbot Response
+```
+
+## 2.2 Streamlit Architecture
+```bash
+App                 (Main application on startup)
+│
+▼
+Welcome Page        (Informative and provides proper instructions for
+                    improving photo quality to maximize model accuracy)
+│
+▼
+Species Info Page   (Displays sample leaf images of the corresponding 
+                    species button and generates a GPT description of 
+                    the selected species. Providing user as much context
+                    about species as needed)
+│
+▼
+Upload & Classify   (Page where above pipeline is implemented. Select 
+                    photo and get instant results.)
+│
+▼
+Chatbot             (Provides helpful information about possible treatment
+                    options, diseases, climate preferences etc...)
 ```
 
 
@@ -194,10 +220,10 @@ Training notebooks are located in:
 - Model evaluation
 - Export of .pth weights
 
-To begin training:
+### To begin training:
 ```bash
 jupyter notebook
-```
+```  
 Open any training notebook.
 
 ---
@@ -208,7 +234,8 @@ Open any training notebook.
 ```bash
 tests/evaluate_model.ipynb
 ```
-This notebook provides:
+
+### This notebook provides:
 
 - Accuracy
 - Confusion matrices
@@ -224,7 +251,7 @@ This notebook provides:
 3. Make changes  
 4. Submit a pull request  
 
-Contributions of new species, diseases, or model improvements are encouraged.
+*Contributions of new species, diseases, or model improvements are encouraged.*
 
 ---
 
