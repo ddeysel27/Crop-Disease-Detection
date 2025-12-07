@@ -40,7 +40,7 @@ The architecture is designed to be modular, interpretable, and scalable.
 Leaf Image ──► Preprocessing ──► Species Classifier (ViT)
 │
 ▼
-Leaf Detection Model (YOLO) Returns bounding boxes and return cropped area
+Leaf Detection Model (YOLO) Returns bounding boxes and cropped area
 │
 ▼
 Species Classifier (ViT)│   Routes to correct Disease Classifier
